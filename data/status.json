@@ -1,5 +1,5 @@
 {
-  "active": false,
-  "task": null,
-  "since": null
+  "active": true,
+  "task": "Updating dashboard",
+  "since": "2026-02-02T22:48:00Z"
 }
