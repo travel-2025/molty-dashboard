@@ -4,9 +4,10 @@
     "project_id": "coconut-breeze",
     "title": "Write travel tech blog post",
     "description": "Based on Monday briefing - AI platforms capturing 50% of travel search",
-    "status": "in_progress",
+    "status": "done",
     "priority": "high",
     "created_at": "2026-02-02T18:07:00Z",
+    "completed_at": "2026-02-02T22:51:00Z",
     "due_date": null
   },
   {
