@@ -1,0 +1,23 @@
+[
+  {
+    "id": "act-001",
+    "timestamp": "2026-02-02T18:07:00Z",
+    "action": "content_suggestion",
+    "description": "Suggested blog post angles for travel tech trends",
+    "project_id": "coconut-breeze"
+  },
+  {
+    "id": "act-002",
+    "timestamp": "2026-02-02T19:14:00Z",
+    "action": "prd_created",
+    "description": "Created PRD for Molty Dashboard",
+    "project_id": "internal"
+  },
+  {
+    "id": "act-003",
+    "timestamp": "2026-02-02T19:40:00Z",
+    "action": "repo_setup",
+    "description": "Initialized molty-dashboard repository",
+    "project_id": "internal"
+  }
+]

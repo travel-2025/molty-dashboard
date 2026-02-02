@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Molty Dashboard</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #3b82f6;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem;
+    }
+    
+    .container { max-width: 1200px; margin: 0 auto; }
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    h1 { font-size: 1.75rem; }
+    h1 span { margin-right: 0.5rem; }
+    
+    .updated { color: var(--muted); font-size: 0.875rem; }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    
+    .card h2 {
+      font-size: 1rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .project {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .project:last-child { border-bottom: none; }
+    
+    .project-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    
+    .project-name { font-weight: 500; }
+    .project-desc { font-size: 0.875rem; color: var(--muted); }
+    
+    .status {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+    
+    .status-active { background: rgba(34, 197, 94, 0.2); color: var(--success); }
+    .status-todo { background: rgba(148, 163, 184, 0.2); color: var(--muted); }
+    .status-in_progress { background: rgba(59, 130, 246, 0.2); color: var(--accent); }
+    .status-done { background: rgba(34, 197, 94, 0.2); color: var(--success); }
+    
+    .task {
+      padding: 1rem;
+      background: rgba(0,0,0,0.2);
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+    }
+    
+    .task:last-child { margin-bottom: 0; }
+    
+    .task-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+    }
+    
+    .task-title { font-weight: 500; }
+    
+    .priority-high { border-left: 3px solid var(--danger); padding-left: 0.75rem; }
+    .priority-medium { border-left: 3px solid var(--warning); padding-left: 0.75rem; }
+    .priority-low { border-left: 3px solid var(--muted); padding-left: 0.75rem; }
+    
+    .task-desc { font-size: 0.875rem; color: var(--muted); }
+    
+    .activity-item {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .activity-item:last-child { border-bottom: none; }
+    
+    .activity-time {
+      font-size: 0.75rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    
+    .activity-desc { font-size: 0.875rem; }
+    
+    .empty { color: var(--muted); font-style: italic; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><span>🔥</span> Molty Dashboard</h1>
+      <div class="updated">Last updated: <span id="lastUpdated">—</span></div>
+    </header>
+    
+    <div class="grid">
+      <div class="card">
+        <h2>📁 Projects</h2>
+        <div id="projects"><p class="empty">Loading...</p></div>
+      </div>
+      
+      <div class="card">
+        <h2>✅ Tasks</h2>
+        <div id="tasks"><p class="empty">Loading...</p></div>
+      </div>
+      
+      <div class="card" style="grid-column: 1 / -1;">
+        <h2>📋 Recent Activity</h2>
+        <div id="activity"><p class="empty">Loading...</p></div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    const BASE = window.location.hostname === 'localhost' || window.location.protocol === 'file:' 
+      ? '.' 
+      : '.';
+    
+    async function loadData() {
+      try {
+        const [projects, tasks, activity] = await Promise.all([
+          fetch(`${BASE}/data/projects.json`).then(r => r.json()),
+          fetch(`${BASE}/data/tasks.json`).then(r => r.json()),
+          fetch(`${BASE}/data/activity.json`).then(r => r.json())
+        ]);
+        
+        renderProjects(projects);
+        renderTasks(tasks, projects);
+        renderActivity(activity);
+        
+        document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
+      } catch (err) {
+        console.error('Failed to load data:', err);
+      }
+    }
+    
+    function renderProjects(projects) {
+      const container = document.getElementById('projects');
+      if (!projects.length) {
+        container.innerHTML = '<p class="empty">No projects yet</p>';
+        return;
+      }
+      
+      container.innerHTML = projects.map(p => `
+        <div class="project">
+          <div class="project-dot" style="background: ${p.color}"></div>
+          <div>
+            <div class="project-name">${p.name}</div>
+            <div class="project-desc">${p.description}</div>
+          </div>
+          <span class="status status-${p.status}">${p.status}</span>
+        </div>
+      `).join('');
+    }
+    
+    function renderTasks(tasks, projects) {
+      const container = document.getElementById('tasks');
+      const activeTasks = tasks.filter(t => t.status !== 'done');
+      
+      if (!activeTasks.length) {
+        container.innerHTML = '<p class="empty">No active tasks</p>';
+        return;
+      }
+      
+      const projectMap = Object.fromEntries(projects.map(p => [p.id, p]));
+      
+      container.innerHTML = activeTasks.map(t => `
+        <div class="task priority-${t.priority || 'medium'}">
+          <div class="task-header">
+            <span class="task-title">${t.title}</span>
+            <span class="status status-${t.status}">${t.status.replace('_', ' ')}</span>
+          </div>
+          <div class="task-desc">${t.description || ''}</div>
+        </div>
+      `).join('');
+    }
+    
+    function renderActivity(activity) {
+      const container = document.getElementById('activity');
+      const recent = activity.slice(-10).reverse();
+      
+      if (!recent.length) {
+        container.innerHTML = '<p class="empty">No activity yet</p>';
+        return;
+      }
+      
+      container.innerHTML = recent.map(a => `
+        <div class="activity-item">
+          <span class="activity-time">${new Date(a.timestamp).toLocaleString()}</span>
+          <span class="activity-desc">${a.description}</span>
+        </div>
+      `).join('');
+    }
+    
+    loadData();
+    
+    // Auto-refresh every 60 seconds
+    setInterval(loadData, 60000);
+  </script>
+</body>
+</html>
