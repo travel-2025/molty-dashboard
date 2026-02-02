@@ -6,14 +6,19 @@
   <title>Molty Dashboard</title>
   <style>
     :root {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --text: #f1f5f9;
-      --muted: #94a3b8;
-      --accent: #3b82f6;
-      --success: #22c55e;
-      --warning: #f59e0b;
-      --danger: #ef4444;
+      --bg: #fafafa;
+      --card: #ffffff;
+      --text: #1a1a1a;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --accent: #dc2626;
+      --accent-light: #fef2f2;
+      --success: #16a34a;
+      --success-light: #f0fdf4;
+      --warning: #d97706;
+      --warning-light: #fffbeb;
+      --info: #2563eb;
+      --info-light: #eff6ff;
     }
     
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -33,27 +38,73 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
     
-    h1 { font-size: 1.75rem; }
-    h1 span { margin-right: 0.5rem; }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    h1 { 
+      font-size: 1.75rem; 
+      color: var(--accent);
+    }
+    
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      font-size: 0.875rem;
+    }
+    
+    .lobster {
+      font-size: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    
+    .lobster.active {
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    
+    .lobster.idle {
+      filter: grayscale(100%);
+      opacity: 0.5;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    
+    .status-text { font-weight: 500; }
+    .status-text.active { color: var(--success); }
+    .status-text.idle { color: var(--muted); }
     
     .updated { color: var(--muted); font-size: 0.875rem; }
     
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 1.5rem;
     }
     
     .card {
       background: var(--card);
+      border: 1px solid var(--border);
       border-radius: 12px;
       padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
     
     .card h2 {
-      font-size: 1rem;
+      font-size: 0.875rem;
       color: var(--muted);
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -63,12 +114,44 @@
       gap: 0.5rem;
     }
     
+    /* Usage Card */
+    .usage-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    
+    .usage-stat {
+      padding: 1rem;
+      background: var(--bg);
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .usage-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    
+    .usage-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    
+    .usage-stat.highlight {
+      background: var(--accent-light);
+      border: 1px solid var(--accent);
+    }
+    
+    /* Projects */
     .project {
       display: flex;
       align-items: center;
       gap: 0.75rem;
       padding: 0.75rem 0;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid var(--border);
     }
     
     .project:last-child { border-bottom: none; }
@@ -77,30 +160,35 @@
       width: 12px;
       height: 12px;
       border-radius: 50%;
+      flex-shrink: 0;
     }
     
+    .project-info { flex: 1; min-width: 0; }
     .project-name { font-weight: 500; }
     .project-desc { font-size: 0.875rem; color: var(--muted); }
     
-    .status {
+    .badge {
       display: inline-block;
       padding: 0.25rem 0.5rem;
       border-radius: 4px;
-      font-size: 0.75rem;
-      font-weight: 500;
+      font-size: 0.7rem;
+      font-weight: 600;
       text-transform: uppercase;
+      flex-shrink: 0;
     }
     
-    .status-active { background: rgba(34, 197, 94, 0.2); color: var(--success); }
-    .status-todo { background: rgba(148, 163, 184, 0.2); color: var(--muted); }
-    .status-in_progress { background: rgba(59, 130, 246, 0.2); color: var(--accent); }
-    .status-done { background: rgba(34, 197, 94, 0.2); color: var(--success); }
+    .badge-active { background: var(--success-light); color: var(--success); }
+    .badge-todo { background: var(--bg); color: var(--muted); }
+    .badge-in_progress { background: var(--info-light); color: var(--info); }
+    .badge-done { background: var(--success-light); color: var(--success); }
     
+    /* Tasks */
     .task {
       padding: 1rem;
-      background: rgba(0,0,0,0.2);
+      background: var(--bg);
       border-radius: 8px;
       margin-bottom: 0.75rem;
+      border-left: 3px solid var(--border);
     }
     
     .task:last-child { margin-bottom: 0; }
@@ -110,19 +198,21 @@
       justify-content: space-between;
       align-items: flex-start;
       margin-bottom: 0.5rem;
+      gap: 0.5rem;
     }
     
     .task-title { font-weight: 500; }
     
-    .priority-high { border-left: 3px solid var(--danger); padding-left: 0.75rem; }
-    .priority-medium { border-left: 3px solid var(--warning); padding-left: 0.75rem; }
-    .priority-low { border-left: 3px solid var(--muted); padding-left: 0.75rem; }
+    .task.priority-high { border-left-color: var(--accent); }
+    .task.priority-medium { border-left-color: var(--warning); }
+    .task.priority-low { border-left-color: var(--muted); }
     
     .task-desc { font-size: 0.875rem; color: var(--muted); }
     
+    /* Activity */
     .activity-item {
       padding: 0.75rem 0;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid var(--border);
       display: flex;
       gap: 1rem;
     }
@@ -133,32 +223,73 @@
       font-size: 0.75rem;
       color: var(--muted);
       white-space: nowrap;
+      min-width: 140px;
     }
     
     .activity-desc { font-size: 0.875rem; }
     
     .empty { color: var(--muted); font-style: italic; }
+    
+    /* Full width cards */
+    .full-width { grid-column: 1 / -1; }
+    
+    /* Responsive */
+    @media (max-width: 600px) {
+      body { padding: 1rem; }
+      header { flex-direction: column; align-items: flex-start; }
+      .usage-grid { grid-template-columns: 1fr 1fr; }
+      .activity-item { flex-direction: column; gap: 0.25rem; }
+      .activity-time { min-width: auto; }
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <h1><span>🔥</span> Molty Dashboard</h1>
+      <div class="header-left">
+        <h1>🔥 Molty Dashboard</h1>
+        <div class="status-indicator">
+          <span class="lobster idle" id="lobster">🦞</span>
+          <span class="status-text idle" id="statusText">Idle</span>
+        </div>
+      </div>
       <div class="updated">Last updated: <span id="lastUpdated">—</span></div>
     </header>
     
     <div class="grid">
       <div class="card">
+        <h2>💰 Usage & Costs</h2>
+        <div class="usage-grid">
+          <div class="usage-stat highlight">
+            <div class="usage-value" id="costToday">$0.00</div>
+            <div class="usage-label">Today</div>
+          </div>
+          <div class="usage-stat">
+            <div class="usage-value" id="costWeek">$0.00</div>
+            <div class="usage-label">This Week</div>
+          </div>
+          <div class="usage-stat">
+            <div class="usage-value" id="costMonth">$0.00</div>
+            <div class="usage-label">This Month</div>
+          </div>
+          <div class="usage-stat">
+            <div class="usage-value" id="tokenCount">0</div>
+            <div class="usage-label">Tokens Today</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
         <h2>📁 Projects</h2>
         <div id="projects"><p class="empty">Loading...</p></div>
       </div>
       
-      <div class="card">
+      <div class="card full-width">
         <h2>✅ Tasks</h2>
         <div id="tasks"><p class="empty">Loading...</p></div>
       </div>
       
-      <div class="card" style="grid-column: 1 / -1;">
+      <div class="card full-width">
         <h2>📋 Recent Activity</h2>
         <div id="activity"><p class="empty">Loading...</p></div>
       </div>
@@ -166,18 +297,20 @@
   </div>
   
   <script>
-    const BASE = window.location.hostname === 'localhost' || window.location.protocol === 'file:' 
-      ? '.' 
-      : '.';
+    const BASE = '.';
     
     async function loadData() {
       try {
-        const [projects, tasks, activity] = await Promise.all([
-          fetch(`${BASE}/data/projects.json`).then(r => r.json()),
-          fetch(`${BASE}/data/tasks.json`).then(r => r.json()),
-          fetch(`${BASE}/data/activity.json`).then(r => r.json())
+        const [projects, tasks, activity, status, usage] = await Promise.all([
+          fetch(`${BASE}/data/projects.json`).then(r => r.json()).catch(() => []),
+          fetch(`${BASE}/data/tasks.json`).then(r => r.json()).catch(() => []),
+          fetch(`${BASE}/data/activity.json`).then(r => r.json()).catch(() => []),
+          fetch(`${BASE}/data/status.json`).then(r => r.json()).catch(() => ({ active: false })),
+          fetch(`${BASE}/data/usage.json`).then(r => r.json()).catch(() => ({}))
         ]);
         
+        renderStatus(status);
+        renderUsage(usage);
         renderProjects(projects);
         renderTasks(tasks, projects);
         renderActivity(activity);
@@ -186,6 +319,28 @@
       } catch (err) {
         console.error('Failed to load data:', err);
       }
+    }
+    
+    function renderStatus(status) {
+      const lobster = document.getElementById('lobster');
+      const statusText = document.getElementById('statusText');
+      
+      if (status.active) {
+        lobster.className = 'lobster active';
+        statusText.className = 'status-text active';
+        statusText.textContent = status.task || 'Working...';
+      } else {
+        lobster.className = 'lobster idle';
+        statusText.className = 'status-text idle';
+        statusText.textContent = 'Idle';
+      }
+    }
+    
+    function renderUsage(usage) {
+      document.getElementById('costToday').textContent = '$' + (usage.today?.cost || 0).toFixed(2);
+      document.getElementById('costWeek').textContent = '$' + (usage.week?.cost || 0).toFixed(2);
+      document.getElementById('costMonth').textContent = '$' + (usage.month?.cost || 0).toFixed(2);
+      document.getElementById('tokenCount').textContent = (usage.today?.tokens || 0).toLocaleString();
     }
     
     function renderProjects(projects) {
@@ -198,11 +353,11 @@
       container.innerHTML = projects.map(p => `
         <div class="project">
           <div class="project-dot" style="background: ${p.color}"></div>
-          <div>
+          <div class="project-info">
             <div class="project-name">${p.name}</div>
             <div class="project-desc">${p.description}</div>
           </div>
-          <span class="status status-${p.status}">${p.status}</span>
+          <span class="badge badge-${p.status}">${p.status}</span>
         </div>
       `).join('');
     }
@@ -216,17 +371,16 @@
         return;
       }
       
-      const projectMap = Object.fromEntries(projects.map(p => [p.id, p]));
-      
-      container.innerHTML = activeTasks.map(t => `
-        <div class="task priority-${t.priority || 'medium'}">
-          <div class="task-header">
-            <span class="task-title">${t.title}</span>
-            <span class="status status-${t.status}">${t.status.replace('_', ' ')}</span>
+      container.innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0.75rem;">' + 
+        activeTasks.map(t => `
+          <div class="task priority-${t.priority || 'medium'}">
+            <div class="task-header">
+              <span class="task-title">${t.title}</span>
+              <span class="badge badge-${t.status}">${t.status.replace('_', ' ')}</span>
+            </div>
+            <div class="task-desc">${t.description || ''}</div>
           </div>
-          <div class="task-desc">${t.description || ''}</div>
-        </div>
-      `).join('');
+        `).join('') + '</div>';
     }
     
     function renderActivity(activity) {
@@ -248,8 +402,8 @@
     
     loadData();
     
-    // Auto-refresh every 60 seconds
-    setInterval(loadData, 60000);
+    // Auto-refresh every 30 seconds
+    setInterval(loadData, 30000);
   </script>
 </body>
 </html>
