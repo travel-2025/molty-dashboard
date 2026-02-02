@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artifacts - Molty Dashboard</title>
+  <style>
+    :root {
+      --bg: #fafafa;
+      --card: #ffffff;
+      --text: #1a1a1a;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --accent: #dc2626;
+      --accent-light: #fef2f2;
+      --success: #16a34a;
+      --success-light: #f0fdf4;
+      --info: #2563eb;
+      --info-light: #eff6ff;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem;
+    }
+    
+    .container { max-width: 1000px; margin: 0 auto; }
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    h1 { font-size: 1.75rem; color: var(--accent); }
+    
+    .back-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .back-link:hover { color: var(--accent); }
+    
+    .filters {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border);
+      background: var(--card);
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+    
+    .filter-btn:hover { border-color: var(--accent); }
+    .filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+    
+    .artifact-list { display: flex; flex-direction: column; gap: 1rem; }
+    
+    .artifact {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    .artifact-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      gap: 1rem;
+    }
+    
+    .artifact-info { flex: 1; min-width: 0; }
+    
+    .artifact-title {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .artifact-meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    
+    .artifact-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+    
+    .btn {
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--border);
+      background: var(--card);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      transition: all 0.2s;
+      text-decoration: none;
+      color: var(--text);
+    }
+    
+    .btn:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-primary { background: var(--accent); color: white; border-color: var(--accent); }
+    .btn-primary:hover { background: #b91c1c; color: white; }
+    
+    .artifact-content {
+      display: none;
+      padding: 1rem 1.5rem;
+      background: var(--bg);
+      max-height: 400px;
+      overflow: auto;
+    }
+    
+    .artifact-content.expanded { display: block; }
+    
+    .artifact-content pre {
+      font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+      font-size: 0.8rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0;
+    }
+    
+    .type-badge {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .type-document { background: var(--info-light); color: var(--info); }
+    .type-code { background: #faf5ff; color: #7c3aed; }
+    .type-image { background: #fdf4ff; color: #c026d3; }
+    .type-data { background: var(--success-light); color: var(--success); }
+    .type-link { background: var(--accent-light); color: var(--accent); }
+    
+    .empty {
+      text-align: center;
+      padding: 3rem;
+      color: var(--muted);
+    }
+    
+    .copy-toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--text);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    
+    .copy-toast.show { opacity: 1; }
+    
+    @media (max-width: 600px) {
+      body { padding: 1rem; }
+      .artifact-header { flex-direction: column; }
+      .artifact-actions { width: 100%; }
+      .btn { flex: 1; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-left">
+        <h1>📄 Artifacts</h1>
+      </div>
+      <a href="index.html" class="back-link">← Back to Dashboard</a>
+    </header>
+    
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="document">📝 Documents</button>
+      <button class="filter-btn" data-filter="code">💻 Code</button>
+      <button class="filter-btn" data-filter="data">📊 Data</button>
+      <button class="filter-btn" data-filter="link">🔗 Links</button>
+    </div>
+    
+    <div class="artifact-list" id="artifactList">
+      <p class="empty">Loading...</p>
+    </div>
+  </div>
+  
+  <div class="copy-toast" id="copyToast">Copied to clipboard!</div>
+  
+  <script>
+    const BASE = '.';
+    let allArtifacts = [];
+    
+    async function loadArtifacts() {
+      try {
+        const artifacts = await fetch(`${BASE}/data/artifacts.json`).then(r => r.json());
+        allArtifacts = artifacts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        renderArtifacts(allArtifacts);
+      } catch (err) {
+        document.getElementById('artifactList').innerHTML = '<p class="empty">No artifacts yet</p>';
+      }
+    }
+    
+    function renderArtifacts(artifacts) {
+      const container = document.getElementById('artifactList');
+      
+      if (!artifacts.length) {
+        container.innerHTML = '<p class="empty">No artifacts found</p>';
+        return;
+      }
+      
+      container.innerHTML = artifacts.map((a, i) => `
+        <div class="artifact" data-type="${a.type}">
+          <div class="artifact-header">
+            <div class="artifact-info">
+              <div class="artifact-title">
+                ${getIcon(a.type)} ${a.title}
+                <span class="type-badge type-${a.type}">${a.type}</span>
+              </div>
+              <div class="artifact-meta">
+                ${new Date(a.created_at).toLocaleString()}
+                ${a.project ? ` · ${a.project}` : ''}
+              </div>
+            </div>
+            <div class="artifact-actions">
+              ${a.content ? `
+                <button class="btn" onclick="toggleContent(${i})">
+                  👁️ View
+                </button>
+                <button class="btn" onclick="copyContent(${i})">
+                  📋 Copy
+                </button>
+              ` : ''}
+              ${a.url ? `
+                <a class="btn btn-primary" href="${a.url}" target="_blank">
+                  🔗 Open
+                </a>
+              ` : ''}
+              ${a.github_url ? `
+                <a class="btn" href="${a.github_url}" target="_blank">
+                  GitHub
+                </a>
+              ` : ''}
+            </div>
+          </div>
+          ${a.content ? `
+            <div class="artifact-content" id="content-${i}">
+              <pre>${escapeHtml(a.content)}</pre>
+            </div>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+    
+    function getIcon(type) {
+      const icons = {
+        document: '📝',
+        code: '💻',
+        image: '🖼️',
+        data: '📊',
+        link: '🔗'
+      };
+      return icons[type] || '📄';
+    }
+    
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    function toggleContent(index) {
+      const content = document.getElementById(`content-${index}`);
+      content.classList.toggle('expanded');
+    }
+    
+    function copyContent(index) {
+      const content = allArtifacts[index].content;
+      navigator.clipboard.writeText(content).then(() => {
+        const toast = document.getElementById('copyToast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+      });
+    }
+    
+    // Filter handling
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        const filter = btn.dataset.filter;
+        if (filter === 'all') {
+          renderArtifacts(allArtifacts);
+        } else {
+          renderArtifacts(allArtifacts.filter(a => a.type === filter));
+        }
+      });
+    });
+    
+    loadArtifacts();
+  </script>
+</body>
+</html>

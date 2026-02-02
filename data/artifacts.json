@@ -1,0 +1,28 @@
+[
+  {
+    "id": "prd-dashboard",
+    "title": "PRD: Molty Dashboard",
+    "type": "document",
+    "project": "Internal",
+    "created_at": "2026-02-02T19:14:00Z",
+    "content": "# PRD: Molty Dashboard\n\n**Version:** 1.0\n**Created:** 2026-02-02\n**Author:** Molty + Juli\n**Status:** Draft\n\n## Overview\n\nA personal dashboard to track what Molty (AI assistant) and Juli are working on together — tasks, projects, costs, and activity over time.\n\n## Goals\n\n1. **Task Tracking** — See active projects, completed tasks, and backlog\n2. **Cost Visibility** — Track AI token usage and estimated costs\n3. **Activity Feed** — Real-time or near-real-time log of Molty's actions\n4. **Project Organization** — Group tasks by client/project (Coconut Breeze, Brand Filtr, etc.)\n\n## Features\n\n### MVP (Phase 1)\n- Project List\n- Task Board\n- Activity Log\n- Cost Tracker\n- Manual Task Entry\n\n### Future (Phase 2)\n- Calendar Integration\n- Automated Task Creation\n- Client Portal\n- Time Tracking",
+    "github_url": "https://github.com/travel-2025/molty-dashboard"
+  },
+  {
+    "id": "travel-briefing-2026-02-02",
+    "title": "Travel Tech Briefing - Feb 2, 2026",
+    "type": "document",
+    "project": "Coconut Breeze Media",
+    "created_at": "2026-02-02T18:05:00Z",
+    "content": "# Travel Tech Briefing — Feb 2, 2026\n\n## Headlines\n\n• AI platforms projected to capture 50% of travel search this year\n• Virgin Atlantic adding real-time voice AI concierge\n• OpenAI + Booking.com launch SME AI accelerator in Europe\n• ITB Berlin's Travel Tech Track next month showcasing autonomous booking systems\n\n## Blog Post Angles\n\n1. **LinkedIn hot takes** — Pick one headline, add your perspective\n2. **Blog post:** \"What Virgin Atlantic's Voice AI Means for Customer Experience\"\n3. **Blog post:** \"SMEs + AI: What the Booking.com Accelerator Signals\"\n4. **Blog post:** \"Autonomous Booking Systems: Hype vs. Reality\"\n\n## Recommended Action\n\nPick the AI search stat (most impactful), write a 3-paragraph LinkedIn post with your take on what travel businesses should do now."
+  },
+  {
+    "id": "dashboard-repo",
+    "title": "Molty Dashboard Repository",
+    "type": "link",
+    "project": "Internal",
+    "created_at": "2026-02-02T19:45:00Z",
+    "url": "https://github.com/travel-2025/molty-dashboard",
+    "github_url": "https://github.com/travel-2025/molty-dashboard"
+  }
+]

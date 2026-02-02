@@ -89,6 +89,23 @@
     
     .updated { color: var(--muted); font-size: 0.875rem; }
     
+    .nav-link {
+      padding: 0.5rem 1rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    
+    .nav-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -248,6 +265,7 @@
     <header>
       <div class="header-left">
         <h1>🔥 Molty Dashboard</h1>
+        <a href="artifacts.html" class="nav-link">📄 Artifacts</a>
         <div class="status-indicator">
           <span class="lobster idle" id="lobster">🦞</span>
           <span class="status-text idle" id="statusText">Idle</span>
