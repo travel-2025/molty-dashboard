@@ -1,5 +1,19 @@
 [
   {
+    "id": "act-007",
+    "timestamp": "2026-02-03T18:43:00Z",
+    "action": "document_created",
+    "description": "Created Molty Capabilities document - comprehensive list of all skills and tools",
+    "project_id": "internal"
+  },
+  {
+    "id": "act-006",
+    "timestamp": "2026-02-03T11:52:00Z",
+    "action": "maintenance",
+    "description": "Cleaned up workspace: removed old files, trimmed AGENTS.md, moved PNGs to assets - reduced ~4KB per session",
+    "project_id": "internal"
+  },
+  {
     "id": "act-004",
     "timestamp": "2026-02-03T02:24:00Z",
     "action": "document_created",
