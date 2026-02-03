@@ -1,5 +1,16 @@
 [
   {
+    "id": "task-003",
+    "project_id": "brand-filtr",
+    "title": "Create Blog Strategy & Rules Document",
+    "description": "Research competitors, create topic list, SEO/GEO rules, content calendar framework",
+    "status": "done",
+    "priority": "high",
+    "created_at": "2026-02-03T02:20:00Z",
+    "completed_at": "2026-02-03T02:45:00Z",
+    "due_date": null
+  },
+  {
     "id": "task-001",
     "project_id": "coconut-breeze",
     "title": "Write travel tech blog post",

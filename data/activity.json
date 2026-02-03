@@ -1,5 +1,19 @@
 [
   {
+    "id": "act-004",
+    "timestamp": "2026-02-03T02:24:00Z",
+    "action": "document_created",
+    "description": "Created Brand Filtr Blog Strategy & Rules document with 47 topic ideas, SEO rules, and GEO optimization guidelines",
+    "project_id": "brand-filtr"
+  },
+  {
+    "id": "act-005",
+    "timestamp": "2026-02-03T03:10:00Z",
+    "action": "dashboard_updated",
+    "description": "Added Blog Rules to dashboard artifacts, updated workflow in AGENTS.md",
+    "project_id": "internal"
+  },
+  {
     "id": "act-001",
     "timestamp": "2026-02-02T18:07:00Z",
     "action": "content_suggestion",

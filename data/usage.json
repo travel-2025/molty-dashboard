@@ -1,17 +1,17 @@
 {
   "today": {
-    "date": "2026-02-02",
-    "cost": 0.42,
-    "tokens": 15240
+    "date": "2026-02-03",
+    "cost": 0.85,
+    "tokens": 53000
   },
   "week": {
     "start": "2026-01-27",
-    "cost": 3.85,
-    "tokens": 142000
+    "cost": 4.70,
+    "tokens": 195000
   },
   "month": {
     "month": "2026-02",
-    "cost": 3.85,
-    "tokens": 142000
+    "cost": 4.70,
+    "tokens": 195000
   }
 }
